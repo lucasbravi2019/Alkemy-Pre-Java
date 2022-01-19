@@ -27,6 +27,7 @@ public class Icon {
 
     private String image;
 
+    @Column(unique = true)
     private String name;
 
     @Column(name = "created_at")

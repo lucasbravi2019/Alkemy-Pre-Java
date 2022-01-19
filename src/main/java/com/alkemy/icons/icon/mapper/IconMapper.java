@@ -3,6 +3,7 @@ package com.alkemy.icons.icon.mapper;
 import com.alkemy.icons.country.entity.Country;
 import com.alkemy.icons.icon.dto.IconBasicDTO;
 import com.alkemy.icons.icon.dto.IconDTO;
+import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import com.alkemy.icons.icon.entity.Icon;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +54,26 @@ public class IconMapper {
         List<IconBasicDTO> iconsDTO = new ArrayList<>();
         for(Icon icon : icons) {
             iconsDTO.add(icon2IconBasicDTO(icon));
+        }
+        return iconsDTO;
+    }
+
+    public IconDetailedDTO icon2IconDetailedDTO(Icon icon) {
+        IconDetailedDTO dto = new IconDetailedDTO();
+        dto.setId(icon.getId());
+        dto.setCountries(icon.getCountries());
+        dto.setHeight(icon.getHeight());
+        dto.setHistory(icon.getHistory());
+        dto.setCreatedAt(icon.getCreatedAt());
+        dto.setImage(icon.getImage());
+        dto.setName(icon.getName());
+        return dto;
+    }
+
+    public List<IconDetailedDTO> icon2IconDetailedDTOList(List<Icon> icons) {
+        List<IconDetailedDTO> iconsDTO = new ArrayList<>();
+        for(Icon icon : icons) {
+            iconsDTO.add(icon2IconDetailedDTO(icon));
         }
         return iconsDTO;
     }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ public class Country {
 
     private String image;
 
+    @Column(unique = true)
     private String name;
 
     private Long population;
@@ -53,6 +55,8 @@ public class Country {
             inverseJoinColumns = @JoinColumn(name = "icon_id")
     )
     private Set<Icon> icons = new HashSet<>();
+
+    private LocalDate createdAt = LocalDate.now();
 
     public void addIcon(Icon icon) {
         this.icons.add(icon);

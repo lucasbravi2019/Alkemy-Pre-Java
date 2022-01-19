@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,8 @@ public class CountryDetailedDTO implements Serializable {
     private Long population;
 
     private Long totalSurface;
+
+    private LocalDate createdAt;
 
     private Continent continent;
 

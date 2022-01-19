@@ -1,6 +1,7 @@
 package com.alkemy.icons.icon.controller;
 
 import com.alkemy.icons.icon.dto.IconDTO;
+import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import com.alkemy.icons.icon.entity.Icon;
 import com.alkemy.icons.icon.service.IconService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/icons")
@@ -19,9 +22,15 @@ public class IconController {
     private IconService iconService;
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String date,
+        @RequestParam(required = false) Set<Long> cities,
+        @RequestParam(required = false, defaultValue = "ASC") String order
+    ) {
         try {
-            return new ResponseEntity<>(iconService.getAll(), HttpStatus.OK);
+            List<IconDetailedDTO> icons = iconService.getByFilters(name, date, cities, order);
+            return new ResponseEntity<>(icons, HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -37,7 +46,7 @@ public class IconController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Icon> createIcon(@Valid @RequestBody IconDTO iconDTO) {
+    public ResponseEntity<IconDetailedDTO> createIcon(@Valid @RequestBody IconDTO iconDTO) {
         try {
             return new ResponseEntity<>(iconService.createIcon(iconDTO), HttpStatus.CREATED);
         } catch(Exception e) {
@@ -46,7 +55,7 @@ public class IconController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<IconDTO> getIcon(@PathVariable Long id) {
+    public ResponseEntity<IconDetailedDTO> getIcon(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(iconService.getIconById(id), HttpStatus.OK);
         } catch(NoSuchElementException e) {
@@ -55,7 +64,7 @@ public class IconController {
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<IconDTO> updateIcon(@PathVariable Long id, @Valid @RequestBody IconDTO iconDTO) {
+    public ResponseEntity<IconDetailedDTO> updateIcon(@PathVariable Long id, @Valid @RequestBody IconDTO iconDTO) {
         try {
             return new ResponseEntity<>(iconService.updateIcon(id, iconDTO), HttpStatus.OK);
         } catch(NoSuchElementException e) {

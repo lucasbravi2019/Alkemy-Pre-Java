@@ -1,6 +1,7 @@
 package com.alkemy.icons.country.controller;
 
 import com.alkemy.icons.country.dto.CountryDTO;
+import com.alkemy.icons.country.dto.CountryDetailedDTO;
 import com.alkemy.icons.country.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,13 @@ public class CountryController {
     private CountryService countryService;
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long idContinent,
+            @RequestParam(required = false, defaultValue = "ASC") String order
+    ) {
         try {
-            return new ResponseEntity<>(countryService.getAll(), HttpStatus.OK);
+            return new ResponseEntity<>(countryService.getAllByFilters(name, idContinent, order), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -36,16 +41,16 @@ public class CountryController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CountryDTO> createCountry(@Valid @RequestBody CountryDTO countryDTO) {
+    public ResponseEntity<?> createCountry(@Valid @RequestBody CountryDTO countryDTO) {
         try {
             return new ResponseEntity<>(countryService.createCountry(countryDTO), HttpStatus.CREATED);
         } catch(Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CountryDTO> getCountry(@PathVariable Long id) {
+    public ResponseEntity<CountryDetailedDTO> getCountry(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(countryService.getCountryById(id), HttpStatus.OK);
         } catch(NoSuchElementException e) {
@@ -54,11 +59,11 @@ public class CountryController {
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<CountryDTO> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryDTO countryDTO) {
+    public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryDTO countryDTO) {
         try {
             return new ResponseEntity<>(countryService.updateCountry(id, countryDTO), HttpStatus.OK);
         } catch(NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

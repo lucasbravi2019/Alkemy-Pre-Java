@@ -1,14 +1,9 @@
 package com.alkemy.icons.icon.dto;
 
 import com.alkemy.icons.country.entity.Country;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,34 +13,31 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Getter
-//@Setter
-@Data
+@Getter
+@Setter
 public class IconDTO implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
     private Long id;
 
-    @NotEmpty(message = "Image is required")
+    @NotEmpty(message = "is required")
     private String image;
 
-    @NotEmpty(message = "Name is required")
+    @NotEmpty(message = "is required")
     private String name;
 
-    @PastOrPresent(message = "Date must be past or present")
+    @PastOrPresent(message = "must be past or present")
     private LocalDate createdAt;
 
-    @NotNull(message = "Height is required")
+    @NotNull(message = "is required")
     @Min(value = 0, message = "Height must be 0 or positive number")
     private Double height;
 
-    @NotEmpty(message = "History is required")
+    @NotEmpty(message = "is required")
     private String history;
 
     private boolean deleted = Boolean.FALSE;
-
-    private List<String> countryNames = new ArrayList<>();
 
     private List<Country> countries = new ArrayList<>();
 

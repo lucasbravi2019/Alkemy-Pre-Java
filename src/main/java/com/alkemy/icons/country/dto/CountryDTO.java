@@ -20,23 +20,23 @@ public class CountryDTO implements Serializable {
 
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "is required")
     private String image;
 
-    @NotEmpty
+    @NotEmpty(message = "is required")
     private String name;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "is required")
+    @Min(value = 0, message = "Population minimum must be 0 or above")
     private Long population;
 
-    @NotNull
-    @Min(0)
+    @NotNull(message = "is required")
+    @Min(value = 0, message = "Total Surface minimum must be 0 or above")
     private Long totalSurface;
 
     private Continent continent;
 
-    @NotNull
+    @NotNull(message = "is required")
     private Long continentId;
 
     private Set<String> iconsNames = new HashSet<>();

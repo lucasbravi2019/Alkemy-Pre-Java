@@ -1,4 +1,4 @@
-package com.alkemy.icons.security;
+package com.alkemy.icons.general.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

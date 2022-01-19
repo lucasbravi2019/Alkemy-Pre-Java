@@ -4,9 +4,12 @@ import com.alkemy.icons.continent.entity.Continent;
 import com.alkemy.icons.continent.repo.ContinentRepo;
 import com.alkemy.icons.country.dto.CountryBasicDTO;
 import com.alkemy.icons.country.dto.CountryDTO;
+import com.alkemy.icons.country.dto.CountryDetailedDTO;
+import com.alkemy.icons.country.dto.CountryFilterDTO;
 import com.alkemy.icons.country.entity.Country;
 import com.alkemy.icons.country.mapper.CountryMapper;
 import com.alkemy.icons.country.repo.CountryRepo;
+import com.alkemy.icons.country.repo.specification.CountrySpecification;
 import com.alkemy.icons.icon.entity.Icon;
 import com.alkemy.icons.icon.repo.IconRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ public class CountryServiceImpl implements CountryService {
     private ContinentRepo continentRepo;
 
     @Autowired
+    private CountrySpecification countrySpecification;
+
+    @Autowired
     private CountryRepo countryRepo;
 
     @Autowired
@@ -33,9 +39,9 @@ public class CountryServiceImpl implements CountryService {
     private CountryMapper countryMapper;
 
     @Override
-    public List<CountryDTO> getAllDetailed() throws Exception {
+    public List<CountryDetailedDTO> getAllDetailed() throws Exception {
         List<Country> countries = countryRepo.findAll();
-        List<CountryDTO> countriesDTO = countryMapper.country2CountryDTOList(countries);
+        List<CountryDetailedDTO> countriesDTO = countryMapper.country2CountryDetailedDTOList(countries);
         if(countriesDTO.isEmpty()) {
             throw new Exception("No countries found");
         }
@@ -53,7 +59,15 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public CountryDTO createCountry(CountryDTO countryDTO) throws Exception {
+    public List<CountryDetailedDTO> getAllByFilters(String name, Long idContinent, String order) throws Exception {
+        CountryFilterDTO filterDTO = new CountryFilterDTO(name, idContinent, order);
+        List<Country> countries = countryRepo.findAll(countrySpecification.getByFilters(filterDTO));
+        List<CountryDetailedDTO> countriesDTO = countryMapper.country2CountryDetailedDTOList(countries);
+        return countriesDTO;
+    }
+
+    @Override
+    public CountryDetailedDTO createCountry(CountryDTO countryDTO) throws Exception {
         Country country = new Country();
         if(!countryDTO.getIconsNames().isEmpty()) {
             for(String name : countryDTO.getIconsNames()) {
@@ -64,39 +78,45 @@ public class CountryServiceImpl implements CountryService {
         country = countryMapper.countryDTO2Country(countryDTO);
         Continent continent = continentRepo.findById(countryDTO.getContinentId()).orElseThrow();
         country.setContinent(continent);
-        countryDTO.setContinent(continent);
         country = countryRepo.save(country);
-        countryDTO.setId(country.getId());
-        return countryDTO;
+        CountryDetailedDTO dto = countryMapper.country2CountryDetailedDTO(country);
+        return dto;
     }
 
     @Override
-    public CountryDTO getCountryById(Long id) throws NoSuchElementException {
+    public CountryDetailedDTO getCountryById(Long id) throws NoSuchElementException {
         Country country = countryRepo.findById(id).orElseThrow();
-        CountryDTO countryDTO = new CountryDTO();
-        countryDTO = countryMapper.country2CountryDTO(country);
+        CountryDetailedDTO countryDTO = new CountryDetailedDTO();
+        countryDTO = countryMapper.country2CountryDetailedDTO(country);
         return countryDTO;
     }
 
     @Override
-    public CountryDTO getCountryByName(String name) throws NoSuchElementException {
+    public CountryDetailedDTO getCountryByName(String name) throws NoSuchElementException {
         Country country = countryRepo.findByName(name).orElseThrow();
-        CountryDTO countryDTO = new CountryDTO();
-        countryDTO = countryMapper.country2CountryDTO(country);
+        CountryDetailedDTO countryDTO = new CountryDetailedDTO();
+        countryDTO = countryMapper.country2CountryDetailedDTO(country);
         return countryDTO;
     }
 
     @Override
-    public CountryDTO updateCountry(Long id, CountryDTO countryDTO) throws NoSuchElementException {
+    public CountryDetailedDTO updateCountry(Long id, CountryDTO countryDTO) throws NoSuchElementException {
         Country country = countryRepo.findById(id).orElseThrow();
+        Continent continent = continentRepo.findById(countryDTO.getContinentId()).orElseThrow();
         country.setName(countryDTO.getName());
         country.setImage(countryDTO.getImage());
-        country.setContinent(countryDTO.getContinent());
+        country.setContinent(continent);
         country.setPopulation(countryDTO.getPopulation());
         country.setTotalSurface(countryDTO.getTotalSurface());
+        if(!countryDTO.getIconsNames().isEmpty()) {
+            for(String name : countryDTO.getIconsNames()) {
+                Icon icon = iconRepo.findByName(name).orElseThrow();
+                countryDTO.addIcon(icon);
+            }
+        }
         country.setIcons(countryDTO.getIcons());
-        countryDTO.setId(country.getId());
-        return countryDTO;
+        CountryDetailedDTO dto = countryMapper.country2CountryDetailedDTO(country);
+        return dto;
     }
 
     @Override

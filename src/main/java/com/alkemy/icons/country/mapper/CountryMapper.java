@@ -2,6 +2,7 @@ package com.alkemy.icons.country.mapper;
 
 import com.alkemy.icons.country.dto.CountryBasicDTO;
 import com.alkemy.icons.country.dto.CountryDTO;
+import com.alkemy.icons.country.dto.CountryDetailedDTO;
 import com.alkemy.icons.country.entity.Country;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +59,25 @@ public class CountryMapper {
         return countriesDTO;
     }
 
+    public CountryDetailedDTO country2CountryDetailedDTO(Country country) {
+        CountryDetailedDTO dto = new CountryDetailedDTO();
+        dto.setId(country.getId());
+        dto.setName(country.getName());
+        dto.setContinent(country.getContinent());
+        dto.setCreatedAt(country.getCreatedAt());
+        dto.setIcons(country.getIcons());
+        dto.setTotalSurface(country.getTotalSurface());
+        dto.setImage(country.getImage());
+        dto.setPopulation(country.getPopulation());
+        return dto;
+    }
 
+    public List<CountryDetailedDTO> country2CountryDetailedDTOList(List<Country> countries) {
+        List<CountryDetailedDTO> countriesDTO = new ArrayList<>();
+        for(Country country : countries) {
+            countriesDTO.add(country2CountryDetailedDTO(country));
+        }
+        return countriesDTO;
+    }
 
 }

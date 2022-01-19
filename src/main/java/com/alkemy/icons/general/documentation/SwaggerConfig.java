@@ -1,4 +1,4 @@
-package com.alkemy.icons;
+package com.alkemy.icons.general.documentation;
 
 import org.springframework.context.annotation.Bean;
 import springfox.documentation.builders.PathSelectors;
