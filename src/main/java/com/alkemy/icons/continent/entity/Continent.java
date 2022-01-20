@@ -25,6 +25,7 @@ public class Continent {
 
     private String image;
 
+    @Column(unique = true)
     private String name;
 
     private boolean deleted = Boolean.FALSE;
