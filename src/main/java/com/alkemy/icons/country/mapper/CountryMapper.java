@@ -1,16 +1,28 @@
 package com.alkemy.icons.country.mapper;
 
+import com.alkemy.icons.continent.dto.ContinentDTO;
+import com.alkemy.icons.continent.entity.Continent;
+import com.alkemy.icons.continent.mapper.ContinentMapper;
 import com.alkemy.icons.country.dto.CountryBasicDTO;
 import com.alkemy.icons.country.dto.CountryDTO;
 import com.alkemy.icons.country.dto.CountryDetailedDTO;
 import com.alkemy.icons.country.entity.Country;
+import com.alkemy.icons.icon.dto.IconDetailedDTO;
+import com.alkemy.icons.icon.mapper.IconMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class CountryMapper {
+
+    @Autowired
+    private ContinentMapper continentMapper;
+
+    private IconMapper iconMapper = new IconMapper();
 
     public Country countryDTO2Country(CountryDTO countryDTO) {
         Country country = new Country();
@@ -27,11 +39,12 @@ public class CountryMapper {
         countryDTO.setId(country.getId());
         countryDTO.setName(country.getName());
         countryDTO.setImage(country.getImage());
-        countryDTO.setContinent(country.getContinent());
+        if(country.getContinent() != null) {
+            countryDTO.setContinent(country.getContinent());
+        }
         countryDTO.setIcons(country.getIcons());
         countryDTO.setTotalSurface(country.getTotalSurface());
         countryDTO.setPopulation(country.getPopulation());
-        countryDTO.setContinent(country.getContinent());
         return countryDTO;
     }
 
@@ -59,23 +72,28 @@ public class CountryMapper {
         return countriesDTO;
     }
 
-    public CountryDetailedDTO country2CountryDetailedDTO(Country country) {
+    public CountryDetailedDTO country2CountryDetailedDTO(Country country, boolean loadContinent) {
         CountryDetailedDTO dto = new CountryDetailedDTO();
         dto.setId(country.getId());
         dto.setName(country.getName());
-        dto.setContinent(country.getContinent());
         dto.setCreatedAt(country.getCreatedAt());
-        dto.setIcons(country.getIcons());
+        Set<IconDetailedDTO> iconsDTO = iconMapper.icon2IconDetailedDTOList(country.getIcons(), false);
+        dto.setIcons(iconsDTO);
         dto.setTotalSurface(country.getTotalSurface());
         dto.setImage(country.getImage());
         dto.setPopulation(country.getPopulation());
+        if(loadContinent && country.getContinent() != null) {
+            Continent continent = country.getContinent();
+            ContinentDTO continentDTO = continentMapper.continent2ContinentDTO(country.getContinent());
+            dto.setContinent(continentDTO);
+        }
         return dto;
     }
 
-    public List<CountryDetailedDTO> country2CountryDetailedDTOList(List<Country> countries) {
+    public List<CountryDetailedDTO> country2CountryDetailedDTOList(List<Country> countries, boolean loadContinent) {
         List<CountryDetailedDTO> countriesDTO = new ArrayList<>();
         for(Country country : countries) {
-            countriesDTO.add(country2CountryDetailedDTO(country));
+            countriesDTO.add(country2CountryDetailedDTO(country, loadContinent));
         }
         return countriesDTO;
     }

@@ -1,7 +1,6 @@
 package com.alkemy.icons.icon.entity;
 
 import com.alkemy.icons.country.entity.Country;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -16,13 +15,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "icon")
 @SQLDelete(sql = "UPDATE icon SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
 public class Icon {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String image;
@@ -40,7 +38,6 @@ public class Icon {
 
     private boolean deleted = Boolean.FALSE;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "icons", cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE

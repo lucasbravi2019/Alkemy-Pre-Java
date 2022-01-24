@@ -1,7 +1,6 @@
 package com.alkemy.icons.continent.controller;
 
 import com.alkemy.icons.continent.dto.ContinentDTO;
-import com.alkemy.icons.continent.entity.Continent;
 import com.alkemy.icons.continent.service.ContinentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

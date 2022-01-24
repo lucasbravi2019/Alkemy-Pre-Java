@@ -1,6 +1,6 @@
 package com.alkemy.icons.icon.dto;
 
-import com.alkemy.icons.country.entity.Country;
+import com.alkemy.icons.country.dto.CountryDetailedDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +27,6 @@ public class IconDetailedDTO implements Serializable {
 
     private String history;
 
-    private List<Country> countries = new ArrayList<>();
+    private List<CountryDetailedDTO> countries = new ArrayList<>();
 
 }

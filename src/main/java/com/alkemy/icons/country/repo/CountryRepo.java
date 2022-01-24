@@ -1,7 +1,6 @@
 package com.alkemy.icons.country.repo;
 
 import com.alkemy.icons.country.entity.Country;
-import com.alkemy.icons.country.repo.specification.CountrySpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

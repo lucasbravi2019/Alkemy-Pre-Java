@@ -4,12 +4,15 @@ import com.alkemy.icons.continent.dto.ContinentDTO;
 import com.alkemy.icons.continent.entity.Continent;
 import com.alkemy.icons.continent.mapper.ContinentMapper;
 import com.alkemy.icons.continent.repo.ContinentRepo;
+import com.alkemy.icons.country.entity.Country;
+import com.alkemy.icons.country.repo.CountryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,18 +24,18 @@ public class ContinentServiceImpl implements ContinentService {
     @Autowired
     private ContinentMapper continentMapper;
 
+    @Autowired
+    private CountryRepo countryRepo;
+
     @Override
-    public List<ContinentDTO> getAll() throws Exception {
+    public List<ContinentDTO> getAll() {
         List<Continent> continents = continentRepo.findAll();
-        if(continents.isEmpty()) {
-            throw new Exception("No continents found");
-        }
         List<ContinentDTO> continentsDTO = continentMapper.continent2ContinentDTOList(continents);
         return continentsDTO;
     }
 
     @Override
-    public ContinentDTO createContinent(ContinentDTO continentDTO) throws Exception {
+    public ContinentDTO createContinent(ContinentDTO continentDTO) {
         Continent continent = continentMapper.continentDTO2Continent(continentDTO);
         continent = continentRepo.save(continent);
         continentDTO.setId(continent.getId());
@@ -57,7 +60,6 @@ public class ContinentServiceImpl implements ContinentService {
     public ContinentDTO updateContinent(Long id, ContinentDTO continentDTO) throws NoSuchElementException {
         Continent continent = continentRepo.findById(id).orElseThrow();
         continentDTO.setId(continent.getId());
-        continentDTO.setCountries(continent.getCountries());
         continent.setName(continentDTO.getName());
         continent.setImage(continentDTO.getImage());
         return continentDTO;
@@ -65,6 +67,11 @@ public class ContinentServiceImpl implements ContinentService {
 
     @Override
     public void deleteContinent(Long id) throws NoSuchElementException {
+        List<Country> countries = countryRepo.findAll();
+        countries = countries.stream().filter(country -> country.getContinent() != null && country.getContinent().getId() == id).collect(Collectors.toList());
+        for(Country country : countries) {
+            country.setContinent(null);
+        }
         continentRepo.deleteById(id);
     }
 }

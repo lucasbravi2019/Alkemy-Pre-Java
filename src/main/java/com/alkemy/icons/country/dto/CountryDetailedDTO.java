@@ -1,7 +1,7 @@
 package com.alkemy.icons.country.dto;
 
-import com.alkemy.icons.continent.entity.Continent;
-import com.alkemy.icons.icon.entity.Icon;
+import com.alkemy.icons.continent.dto.ContinentDTO;
+import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +28,8 @@ public class CountryDetailedDTO implements Serializable {
 
     private LocalDate createdAt;
 
-    private Continent continent;
+    private ContinentDTO continent;
 
-    private Set<Icon> icons = new HashSet<>();
+    private Set<IconDetailedDTO> icons = new HashSet<>();
 
 }

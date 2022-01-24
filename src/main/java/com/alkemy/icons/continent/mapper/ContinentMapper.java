@@ -15,7 +15,6 @@ public class ContinentMapper {
         dto.setId(continent.getId());
         dto.setName(continent.getName());
         dto.setImage(continent.getImage());
-        dto.setCountries(continent.getCountries());
         return dto;
     }
 

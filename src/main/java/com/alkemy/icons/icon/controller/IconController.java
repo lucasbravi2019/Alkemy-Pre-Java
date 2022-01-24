@@ -1,8 +1,8 @@
 package com.alkemy.icons.icon.controller;
 
+import com.alkemy.icons.icon.dto.IconBasicDTO;
 import com.alkemy.icons.icon.dto.IconDTO;
 import com.alkemy.icons.icon.dto.IconDetailedDTO;
-import com.alkemy.icons.icon.entity.Icon;
 import com.alkemy.icons.icon.service.IconService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -29,7 +28,7 @@ public class IconController {
         @RequestParam(required = false, defaultValue = "ASC") String order
     ) {
         try {
-            List<IconDetailedDTO> icons = iconService.getByFilters(name, date, cities, order);
+            Set<IconBasicDTO> icons = iconService.getByFilters(name, date, cities, order);
             return new ResponseEntity<>(icons, HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

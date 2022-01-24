@@ -2,10 +2,8 @@ package com.alkemy.icons.country.entity;
 
 import com.alkemy.icons.continent.entity.Continent;
 import com.alkemy.icons.icon.entity.Icon;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -15,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "country")
 @Getter
 @Setter
 @SQLDelete(sql = "UPDATE country SET deleted = true WHERE id = ?")
@@ -23,7 +20,7 @@ import java.util.Set;
 public class Country {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String image;
@@ -38,8 +35,10 @@ public class Country {
     @Column(name = "total_surface")
     private Long totalSurface;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinColumn(name = "continent_id")
     private Continent continent;
 

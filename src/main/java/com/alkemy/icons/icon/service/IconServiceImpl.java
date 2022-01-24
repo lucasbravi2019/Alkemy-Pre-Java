@@ -1,6 +1,5 @@
 package com.alkemy.icons.icon.service;
 
-import com.alkemy.icons.country.entity.Country;
 import com.alkemy.icons.country.repo.CountryRepo;
 import com.alkemy.icons.icon.dto.IconBasicDTO;
 import com.alkemy.icons.icon.dto.IconDTO;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -36,53 +34,47 @@ public class IconServiceImpl implements IconService {
     private IconMapper iconMapper;
 
     @Override
-    public List<IconBasicDTO> getAll() throws Exception {
+    public Set<IconBasicDTO> getAll() {
         List<Icon> icons = iconRepo.findAll();
-        if(icons.isEmpty()) {
-            throw new Exception("No icons found");
-        }
-        List<IconBasicDTO> iconsDTO = iconMapper.icon2IconBasicDTOList(icons);
+        Set<IconBasicDTO> iconsDTO = iconMapper.icon2IconBasicDTOList(icons);
         return iconsDTO;
     }
 
     @Override
-    public List<IconDetailedDTO> getByFilters(String name, String date, Set<Long> cities, String order) throws Exception {
+    public Set<IconBasicDTO> getByFilters(String name, String date, Set<Long> cities, String order) {
         IconFiltersDTO filtersDTO = new IconFiltersDTO(name, date, cities, order);
         List<Icon> icons = iconRepo.findAll(iconSpecification.getByFilters(filtersDTO));
-        List<IconDetailedDTO> iconsDTO = iconMapper.icon2IconDetailedDTOList(icons);
+        Set<IconBasicDTO> iconsDTO = iconMapper.icon2IconBasicDTOList(icons);
         return iconsDTO;
     }
 
     @Override
-    public List<IconDetailedDTO> getAllDetailed() throws Exception {
+    public Set<IconDetailedDTO> getAllDetailed() {
         List<Icon> icons = iconRepo.findAll();
-        if(icons.isEmpty()) {
-            throw new Exception("No icons found");
-        }
-        List<IconDetailedDTO> iconsDTO = iconMapper.icon2IconDetailedDTOList(icons);
+        Set<IconDetailedDTO> iconsDTO = iconMapper.icon2IconDetailedDTOList(icons, true);
         return iconsDTO;
     }
 
     @Override
-    public IconDetailedDTO createIcon(IconDTO iconDTO) throws Exception {
+    public IconDetailedDTO createIcon(IconDTO iconDTO) {
         Icon icon = new Icon();
         icon = iconMapper.iconDTO2Icon(iconDTO);
         icon = iconRepo.save(icon);
-        IconDetailedDTO dto = iconMapper.icon2IconDetailedDTO(icon);
+        IconDetailedDTO dto = iconMapper.icon2IconDetailedDTO(icon, true);
         return dto;
     }
 
     @Override
     public IconDetailedDTO getIconById(Long id) throws NoSuchElementException {
         Icon icon = iconRepo.findById(id).orElseThrow();
-        IconDetailedDTO iconDTO = iconMapper.icon2IconDetailedDTO(icon);
+        IconDetailedDTO iconDTO = iconMapper.icon2IconDetailedDTO(icon, true);
         return iconDTO;
     }
 
     @Override
     public IconDetailedDTO getIconByName(String name) throws NoSuchElementException {
         Icon icon = iconRepo.findByName(name).orElseThrow();
-        IconDetailedDTO iconDTO = iconMapper.icon2IconDetailedDTO(icon);
+        IconDetailedDTO iconDTO = iconMapper.icon2IconDetailedDTO(icon, true);
         return iconDTO;
     }
 
@@ -94,7 +86,7 @@ public class IconServiceImpl implements IconService {
         icon.setCreatedAt(iconDTO.getCreatedAt());
         icon.setHeight(iconDTO.getHeight());
         icon.setHistory(iconDTO.getHistory());
-        IconDetailedDTO dto = iconMapper.icon2IconDetailedDTO(icon);
+        IconDetailedDTO dto = iconMapper.icon2IconDetailedDTO(icon, true);
         return dto;
     }
 

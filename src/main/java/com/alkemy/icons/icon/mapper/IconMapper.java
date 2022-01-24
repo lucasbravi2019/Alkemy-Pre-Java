@@ -1,17 +1,24 @@
 package com.alkemy.icons.icon.mapper;
 
-import com.alkemy.icons.country.entity.Country;
+import com.alkemy.icons.country.dto.CountryDetailedDTO;
+import com.alkemy.icons.country.mapper.CountryMapper;
 import com.alkemy.icons.icon.dto.IconBasicDTO;
 import com.alkemy.icons.icon.dto.IconDTO;
 import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import com.alkemy.icons.icon.entity.Icon;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class IconMapper {
+
+    @Autowired
+    private CountryMapper countryMapper;
 
     public IconDTO icon2IconDTO(Icon icon) {
         IconDTO iconDTO = new IconDTO();
@@ -50,18 +57,21 @@ public class IconMapper {
         return dto;
     }
 
-    public List<IconBasicDTO> icon2IconBasicDTOList(List<Icon> icons) {
-        List<IconBasicDTO> iconsDTO = new ArrayList<>();
+    public Set<IconBasicDTO> icon2IconBasicDTOList(List<Icon> icons) {
+        Set<IconBasicDTO> iconsDTO = new HashSet<>();
         for(Icon icon : icons) {
             iconsDTO.add(icon2IconBasicDTO(icon));
         }
         return iconsDTO;
     }
 
-    public IconDetailedDTO icon2IconDetailedDTO(Icon icon) {
+    public IconDetailedDTO icon2IconDetailedDTO(Icon icon, boolean loadCountries) {
         IconDetailedDTO dto = new IconDetailedDTO();
         dto.setId(icon.getId());
-        dto.setCountries(icon.getCountries());
+        if(loadCountries) {
+            List<CountryDetailedDTO> countriesDTO = countryMapper.country2CountryDetailedDTOList(icon.getCountries(), true);
+            dto.setCountries(countriesDTO);
+        }
         dto.setHeight(icon.getHeight());
         dto.setHistory(icon.getHistory());
         dto.setCreatedAt(icon.getCreatedAt());
@@ -70,10 +80,18 @@ public class IconMapper {
         return dto;
     }
 
-    public List<IconDetailedDTO> icon2IconDetailedDTOList(List<Icon> icons) {
-        List<IconDetailedDTO> iconsDTO = new ArrayList<>();
+    public Set<IconDetailedDTO> icon2IconDetailedDTOList(List<Icon> icons, boolean loadCountries) {
+        Set<IconDetailedDTO> iconsDTO = new HashSet<>();
         for(Icon icon : icons) {
-            iconsDTO.add(icon2IconDetailedDTO(icon));
+            iconsDTO.add(icon2IconDetailedDTO(icon, loadCountries));
+        }
+        return iconsDTO;
+    }
+
+    public Set<IconDetailedDTO> icon2IconDetailedDTOList(Set<Icon> icons, boolean loadCountries) {
+        Set<IconDetailedDTO> iconsDTO = new HashSet<>();
+        for(Icon icon : icons) {
+            iconsDTO.add(icon2IconDetailedDTO(icon, loadCountries));
         }
         return iconsDTO;
     }
