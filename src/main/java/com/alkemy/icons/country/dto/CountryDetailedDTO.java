@@ -1,14 +1,13 @@
 package com.alkemy.icons.country.dto;
 
-import com.alkemy.icons.continent.dto.ContinentDTO;
+import com.alkemy.icons.continent.dto.ContinentDetailedDTO;
 import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,8 +27,8 @@ public class CountryDetailedDTO implements Serializable {
 
     private LocalDate createdAt;
 
-    private ContinentDTO continent;
+    private ContinentDetailedDTO continent;
 
-    private Set<IconDetailedDTO> icons = new HashSet<>();
+    private List<IconDetailedDTO> icons;
 
 }

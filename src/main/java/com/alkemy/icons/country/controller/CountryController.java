@@ -1,80 +1,75 @@
 package com.alkemy.icons.country.controller;
 
+import com.alkemy.icons.country.dto.CountryBasicDTO;
 import com.alkemy.icons.country.dto.CountryDTO;
 import com.alkemy.icons.country.dto.CountryDetailedDTO;
+import com.alkemy.icons.country.entity.Country;
 import com.alkemy.icons.country.service.CountryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.alkemy.icons.general.controller.CustomRestControllerImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/cities")
-public class CountryController {
+public class CountryController extends CustomRestControllerImpl<
+        CountryService,
+        Country,
+        CountryDTO,
+        CountryBasicDTO,
+        CountryDetailedDTO> {
 
-    @Autowired
-    private CountryService countryService;
+    public CountryController(CountryService service) {
+        this.service = service;
+    }
+
+    @GetMapping("/all")
+    @Override
+    public ResponseEntity<List<CountryBasicDTO>> getAll() {
+        return super.getAll();
+    }
 
     @GetMapping
-    public ResponseEntity<?> getAll(
+    public ResponseEntity<List<CountryBasicDTO>> getByFilters(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long idContinent,
             @RequestParam(required = false, defaultValue = "ASC") String order
     ) {
         try {
-            return new ResponseEntity<>(countryService.getAllByFilters(name, idContinent, order), HttpStatus.OK);
+            return new ResponseEntity<>(service.getByFilters(name, idContinent, order), HttpStatus.OK);
         } catch(Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/detailed")
-    public ResponseEntity<?> getAllDetailed() {
-        try {
-            return new ResponseEntity<>(countryService.getAllDetailed(), HttpStatus.OK);
-        } catch(Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createCountry(@Valid @RequestBody CountryDTO countryDTO) {
-        try {
-            return new ResponseEntity<>(countryService.createCountry(countryDTO), HttpStatus.CREATED);
-        } catch(Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CountryDetailedDTO> getCountry(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(countryService.getCountryById(id), HttpStatus.OK);
-        } catch(NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<CountryDetailedDTO> getDetailed(@PathVariable Long id, boolean loadRelationship) throws NoSuchElementException {
+        return super.getDetailed(id, true);
+    }
+
+    @PostMapping("/create")
+    @Override
+    public ResponseEntity<CountryDetailedDTO> create(@Valid @RequestBody CountryDTO countryDTO, boolean loadRelationship) {
+        return super.create(countryDTO, true);
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryDTO countryDTO) {
-        try {
-            return new ResponseEntity<>(countryService.updateCountry(id, countryDTO), HttpStatus.OK);
-        } catch(NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<CountryDetailedDTO> update(@PathVariable Long id, CountryDTO countryDTO, boolean loadRelationship) throws NoSuchElementException {
+        return super.update(id, countryDTO, true);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<HttpStatus> deleteCountry(@PathVariable Long id) {
-        try {
-            countryService.deleteCountry(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch(NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) throws NoSuchElementException {
+        return super.delete(id);
     }
-
 }
+
+
+

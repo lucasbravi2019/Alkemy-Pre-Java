@@ -9,8 +9,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
@@ -53,16 +52,8 @@ public class Country {
             joinColumns = @JoinColumn(name = "country_id"),
             inverseJoinColumns = @JoinColumn(name = "icon_id")
     )
-    private Set<Icon> icons = new HashSet<>();
+    private List<Icon> icons;
 
     private LocalDate createdAt = LocalDate.now();
-
-    public void addIcon(Icon icon) {
-        this.icons.add(icon);
-    }
-
-    public void removeIcon(Icon icon) {
-        this.icons.remove(icon);
-    }
 
 }

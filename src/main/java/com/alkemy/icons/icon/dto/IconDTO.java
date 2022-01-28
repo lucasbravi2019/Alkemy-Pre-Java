@@ -1,6 +1,5 @@
 package com.alkemy.icons.icon.dto;
 
-import com.alkemy.icons.country.entity.Country;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,8 +35,6 @@ public class IconDTO implements Serializable {
     @NotEmpty(message = "is required")
     private String history;
 
-    private boolean deleted = Boolean.FALSE;
-
-    private List<Country> countries = new ArrayList<>();
+    private List<Long> countriesId;
 
 }

@@ -3,19 +3,38 @@ package com.alkemy.icons.country.service;
 import com.alkemy.icons.country.dto.CountryBasicDTO;
 import com.alkemy.icons.country.dto.CountryDTO;
 import com.alkemy.icons.country.dto.CountryDetailedDTO;
+import com.alkemy.icons.country.dto.CountryFilterDTO;
+import com.alkemy.icons.country.entity.Country;
+import com.alkemy.icons.country.mapper.CountryMapper;
+import com.alkemy.icons.country.repo.CountryRepo;
+import com.alkemy.icons.country.repo.specification.CountrySpecification;
+import com.alkemy.icons.general.service.CustomServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-public interface CountryService {
+@Service
+public class CountryService extends CustomServiceImpl<
+        CountryMapper,
+        CountryRepo,
+        Country,
+        CountryDTO,
+        CountryBasicDTO,
+        CountryDetailedDTO> {
 
-    List<CountryDetailedDTO> getAllDetailed();
-    List<CountryBasicDTO> getAll();
-    List<CountryBasicDTO> getAllByFilters(String name, Long idContinent, String order);
-    CountryDetailedDTO createCountry(CountryDTO countryDTO);
-    CountryDetailedDTO getCountryById(Long id) throws NoSuchElementException;
-    CountryDetailedDTO getCountryByName(String name) throws NoSuchElementException;
-    CountryDetailedDTO updateCountry(Long id, CountryDTO countryDTO) throws NoSuchElementException;
-    void deleteCountry(Long id) throws NoSuchElementException;
+    @Autowired
+    private CountrySpecification countrySpecification;
+
+    public CountryService(CountryMapper mapper, CountryRepo repo) {
+        this.mapper = mapper;
+        this.repo = repo;
+    }
+
+    public List<CountryBasicDTO> getByFilters(String name, Long idContinent, String order) {
+        CountryFilterDTO filterDTO = new CountryFilterDTO(name, idContinent, order);
+        List<CountryBasicDTO> dto = mapper.toBasicDTOList(repo.findAll(countrySpecification.getByFilters(filterDTO)));
+        return dto;
+    }
 
 }

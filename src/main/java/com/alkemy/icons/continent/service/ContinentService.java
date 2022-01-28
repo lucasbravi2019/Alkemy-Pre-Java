@@ -1,17 +1,29 @@
 package com.alkemy.icons.continent.service;
 
+import com.alkemy.icons.continent.dto.ContinentBasicDTO;
 import com.alkemy.icons.continent.dto.ContinentDTO;
+import com.alkemy.icons.continent.dto.ContinentDetailedDTO;
+import com.alkemy.icons.continent.entity.Continent;
+import com.alkemy.icons.continent.mapper.ContinentMapper;
+import com.alkemy.icons.continent.repo.ContinentRepo;
+import com.alkemy.icons.general.service.CustomServiceImpl;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import javax.transaction.Transactional;
 
-public interface ContinentService {
+@Service
+@Transactional
+public class ContinentService extends CustomServiceImpl<
+        ContinentMapper,
+        ContinentRepo,
+        Continent,
+        ContinentDTO,
+        ContinentBasicDTO,
+        ContinentDetailedDTO> {
 
-    List<ContinentDTO> getAll();
-    ContinentDTO createContinent(ContinentDTO continentDTO);
-    ContinentDTO getContinentById(Long id) throws NoSuchElementException;
-    ContinentDTO getContinentByName(String name) throws NoSuchElementException;
-    ContinentDTO updateContinent(Long id, ContinentDTO continentDTO) throws NoSuchElementException;
-    void deleteContinent(Long id);
+    public ContinentService(ContinentMapper mapper, ContinentRepo repo) {
+        this.mapper = mapper;
+        this.repo = repo;
+    }
 
 }

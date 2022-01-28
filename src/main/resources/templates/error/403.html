@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Something went wrong! Sorry!</title>
+    <title>Forbidden! Code 403</title>
 </head>
 <body>
-    <img src="/images/oops.png">
-    <h1>Something went wrong! Sorry!</h1>
+    <img th:src="@{/images/403.jpg}">
+    <h1>Sorry! You don't have privileges to see this page.</h1>
+    <h2>Error Code: 403</h2>
     <style>
         body {
             background-color: lightgray;
@@ -14,8 +15,8 @@
             flex-direction: column;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
             max-height: 100vh;
+            margin: 0;
         }
         img {
             height: 400px;
@@ -25,6 +26,10 @@
             text-align: center;
             color: gray;
             font-size: 50px;
+        }
+        h2 {
+            text-align: center;
+            color: gray;
         }
     </style>
 </body>

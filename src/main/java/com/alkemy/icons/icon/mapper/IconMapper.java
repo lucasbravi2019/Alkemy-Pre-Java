@@ -1,99 +1,90 @@
 package com.alkemy.icons.icon.mapper;
 
-import com.alkemy.icons.country.dto.CountryDetailedDTO;
 import com.alkemy.icons.country.mapper.CountryMapper;
+import com.alkemy.icons.country.repo.CountryRepo;
+import com.alkemy.icons.general.mapper.CustomMapper;
 import com.alkemy.icons.icon.dto.IconBasicDTO;
 import com.alkemy.icons.icon.dto.IconDTO;
 import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import com.alkemy.icons.icon.entity.Icon;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
-public class IconMapper {
+public class IconMapper implements CustomMapper<
+        Icon,
+        IconDTO,
+        IconBasicDTO,
+        IconDetailedDTO> {
 
-    @Autowired
-    private CountryMapper countryMapper;
+    private CountryRepo countryRepo;
 
-    public IconDTO icon2IconDTO(Icon icon) {
-        IconDTO iconDTO = new IconDTO();
-        iconDTO.setId(icon.getId());
-        iconDTO.setName(icon.getName());
-        iconDTO.setImage(icon.getImage());
-        iconDTO.setCountries(icon.getCountries());
-        iconDTO.setHeight(icon.getHeight());
-        iconDTO.setHistory(icon.getHistory());
-        iconDTO.setCreatedAt(icon.getCreatedAt());
-        return iconDTO;
-    }
-
-    public Icon iconDTO2Icon(IconDTO iconDTO) {
+    @Override
+    public Icon toEntity(IconDTO iconDTO) {
         Icon icon = new Icon();
         icon.setName(iconDTO.getName());
         icon.setImage(iconDTO.getImage());
         icon.setHeight(iconDTO.getHeight());
-        icon.setHistory(iconDTO.getHistory());
         icon.setCreatedAt(iconDTO.getCreatedAt());
+        icon.setHistory(iconDTO.getHistory());
+        icon.setCountries(countryRepo.findAllById(iconDTO.getCountriesId()));
         return icon;
     }
 
-    public List<IconDTO> icon2IconDTOList(List<Icon> icons) {
-        List<IconDTO> iconsDTO = new ArrayList<>();
-        for(Icon icon : icons) {
-            iconsDTO.add(icon2IconDTO(icon));
-        }
-        return iconsDTO;
+    @Override
+    public Icon toEntity(IconDTO iconDTO, Long id) {
+        Icon icon = new Icon();
+        icon.setId(id);
+        icon.setName(iconDTO.getName());
+        icon.setImage(iconDTO.getImage());
+        icon.setHeight(iconDTO.getHeight());
+        icon.setCreatedAt(iconDTO.getCreatedAt());
+        icon.setHistory(iconDTO.getHistory());
+        icon.setCountries(countryRepo.findAllById(iconDTO.getCountriesId()));
+        return icon;
     }
 
-    public IconBasicDTO icon2IconBasicDTO(Icon icon) {
+    @Override
+    public IconBasicDTO toBasicDTO(Icon icon) {
         IconBasicDTO dto = new IconBasicDTO();
-        dto.setImage(icon.getImage());
         dto.setName(icon.getName());
+        dto.setImage(icon.getImage());
         return dto;
     }
 
-    public Set<IconBasicDTO> icon2IconBasicDTOList(List<Icon> icons) {
-        Set<IconBasicDTO> iconsDTO = new HashSet<>();
-        for(Icon icon : icons) {
-            iconsDTO.add(icon2IconBasicDTO(icon));
-        }
-        return iconsDTO;
-    }
-
-    public IconDetailedDTO icon2IconDetailedDTO(Icon icon, boolean loadCountries) {
+    @Override
+    public IconDetailedDTO toDetailedDTO(Icon icon, boolean loadRelationship) {
+        CountryMapper countryMapper = new CountryMapper();
         IconDetailedDTO dto = new IconDetailedDTO();
         dto.setId(icon.getId());
-        if(loadCountries) {
-            List<CountryDetailedDTO> countriesDTO = countryMapper.country2CountryDetailedDTOList(icon.getCountries(), true);
-            dto.setCountries(countriesDTO);
-        }
-        dto.setHeight(icon.getHeight());
-        dto.setHistory(icon.getHistory());
-        dto.setCreatedAt(icon.getCreatedAt());
-        dto.setImage(icon.getImage());
         dto.setName(icon.getName());
+        dto.setImage(icon.getImage());
+        dto.setHeight(icon.getHeight());
+        dto.setCreatedAt(icon.getCreatedAt());
+        dto.setHistory(icon.getHistory());
+        if(loadRelationship) {
+            dto.setCountries(countryMapper.toDetailedDTOList(icon.getCountries(), false));
+        }
         return dto;
     }
 
-    public Set<IconDetailedDTO> icon2IconDetailedDTOList(List<Icon> icons, boolean loadCountries) {
-        Set<IconDetailedDTO> iconsDTO = new HashSet<>();
-        for(Icon icon : icons) {
-            iconsDTO.add(icon2IconDetailedDTO(icon, loadCountries));
+    @Override
+    public List<IconBasicDTO> toBasicDTOList(List<Icon> list) {
+        List<IconBasicDTO> dto = new ArrayList<>();
+        for(Icon icon : list) {
+            dto.add(toBasicDTO(icon));
         }
-        return iconsDTO;
+        return dto;
     }
 
-    public Set<IconDetailedDTO> icon2IconDetailedDTOList(Set<Icon> icons, boolean loadCountries) {
-        Set<IconDetailedDTO> iconsDTO = new HashSet<>();
-        for(Icon icon : icons) {
-            iconsDTO.add(icon2IconDetailedDTO(icon, loadCountries));
+    @Override
+    public List<IconDetailedDTO> toDetailedDTOList(List<Icon> list, boolean loadRelationship) {
+        List<IconDetailedDTO> dto = new ArrayList<>();
+        for(Icon icon : list) {
+            dto.add(toDetailedDTO(icon, loadRelationship));
         }
-        return iconsDTO;
+        return dto;
     }
-
 }

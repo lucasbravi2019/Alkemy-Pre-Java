@@ -34,4 +34,5 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
         ApiErrorDTO apiError = new ApiErrorDTO(HttpStatus.BAD_REQUEST, errors);
         return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
     }
+
 }
