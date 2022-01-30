@@ -25,9 +25,6 @@ public class IconDTO implements Serializable {
     @NotEmpty(message = "is required")
     private String name;
 
-    @PastOrPresent(message = "must be past or present")
-    private LocalDate createdAt;
-
     @NotNull(message = "is required")
     @Min(value = 0, message = "Height must be 0 or positive number")
     private Double height;

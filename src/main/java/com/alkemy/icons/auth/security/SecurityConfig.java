@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeHttpRequests().antMatchers("/webjars/**").permitAll();
         http.authorizeHttpRequests().antMatchers("/swagger-resources/**").permitAll();
         http.authorizeHttpRequests().antMatchers("/v3/**").permitAll();
-        http.authorizeHttpRequests().antMatchers("**").authenticated();
+//        http.authorizeHttpRequests().antMatchers("**").authenticated();
         http.addFilterBefore(new CustomAuthorizationFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
     }
 }

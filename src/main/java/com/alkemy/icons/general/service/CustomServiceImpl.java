@@ -51,7 +51,7 @@ public class CustomServiceImpl<
             throw new NoSuchElementException();
         }
         Entity e = mapper.toEntity(dto, id);
-        repo.save(e);
+        e = repo.save(e);
         return mapper.toDetailedDTO(e, loadRelationship);
     }
 

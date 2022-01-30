@@ -60,7 +60,7 @@ public class CountryController extends CustomRestControllerImpl<
 
     @PutMapping("/{id}/update")
     @Override
-    public ResponseEntity<CountryDetailedDTO> update(@PathVariable Long id, CountryDTO countryDTO, boolean loadRelationship) throws NoSuchElementException {
+    public ResponseEntity<CountryDetailedDTO> update(@PathVariable Long id, @Valid @RequestBody CountryDTO countryDTO, boolean loadRelationship) throws NoSuchElementException {
         return super.update(id, countryDTO, true);
     }
 

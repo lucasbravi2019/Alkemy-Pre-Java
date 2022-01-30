@@ -7,6 +7,7 @@ import com.alkemy.icons.icon.dto.IconBasicDTO;
 import com.alkemy.icons.icon.dto.IconDTO;
 import com.alkemy.icons.icon.dto.IconDetailedDTO;
 import com.alkemy.icons.icon.entity.Icon;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class IconMapper implements CustomMapper<
         IconBasicDTO,
         IconDetailedDTO> {
 
+    @Autowired
     private CountryRepo countryRepo;
 
     @Override
@@ -27,9 +29,10 @@ public class IconMapper implements CustomMapper<
         icon.setName(iconDTO.getName());
         icon.setImage(iconDTO.getImage());
         icon.setHeight(iconDTO.getHeight());
-        icon.setCreatedAt(iconDTO.getCreatedAt());
         icon.setHistory(iconDTO.getHistory());
-        icon.setCountries(countryRepo.findAllById(iconDTO.getCountriesId()));
+        if(iconDTO.getCountriesId() != null) {
+            icon.setCountries(countryRepo.findAllById(iconDTO.getCountriesId()));
+        }
         return icon;
     }
 
@@ -40,9 +43,10 @@ public class IconMapper implements CustomMapper<
         icon.setName(iconDTO.getName());
         icon.setImage(iconDTO.getImage());
         icon.setHeight(iconDTO.getHeight());
-        icon.setCreatedAt(iconDTO.getCreatedAt());
         icon.setHistory(iconDTO.getHistory());
-        icon.setCountries(countryRepo.findAllById(iconDTO.getCountriesId()));
+        if(iconDTO.getCountriesId() != null) {
+            icon.setCountries(countryRepo.findAllById(iconDTO.getCountriesId()));
+        }
         return icon;
     }
 

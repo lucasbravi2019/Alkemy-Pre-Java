@@ -30,7 +30,7 @@ public class Icon {
 
     @Column(name = "created_at")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private LocalDate createdAt;
+    private LocalDate createdAt = LocalDate.now();
 
     private Double height;
 
@@ -43,13 +43,5 @@ public class Icon {
             CascadeType.MERGE
     })
     private List<Country> countries = new ArrayList<>();
-
-    public void addCountry(Country country) {
-        this.countries.add(country);
-    }
-
-    public void removeCountry(Country country) {
-        this.countries.remove(country);
-    }
 
 }

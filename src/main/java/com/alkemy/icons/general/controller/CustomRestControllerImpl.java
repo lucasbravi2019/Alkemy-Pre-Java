@@ -48,11 +48,11 @@ public class CustomRestControllerImpl<
 
     @Override
     public ResponseEntity<DetailedDTO> create(DTO dto, boolean loadRelationship) {
-        try {
+//        try {
             return new ResponseEntity<>(service.create(dto, loadRelationship), HttpStatus.CREATED);
-        } catch(Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+//        } catch(Exception e) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
     }
 
     @Override

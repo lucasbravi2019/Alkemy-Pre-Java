@@ -9,6 +9,7 @@ import com.alkemy.icons.country.entity.Country;
 import com.alkemy.icons.general.mapper.CustomMapper;
 import com.alkemy.icons.icon.mapper.IconMapper;
 import com.alkemy.icons.icon.repo.IconRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -22,7 +23,10 @@ public class CountryMapper implements CustomMapper<
         CountryBasicDTO,
         CountryDetailedDTO> {
 
+    @Autowired
     private ContinentRepo continentRepo;
+
+    @Autowired
     private IconRepo iconRepo;
 
     @Override
@@ -33,8 +37,12 @@ public class CountryMapper implements CustomMapper<
         country.setCreatedAt(LocalDate.now());
         country.setPopulation(countryDTO.getPopulation());
         country.setTotalSurface(countryDTO.getTotalSurface());
-        country.setContinent(continentRepo.getById(countryDTO.getContinentId()));
-        country.setIcons(iconRepo.findAllById(countryDTO.getIconsId()));
+        if(countryDTO.getContinentId() != null) {
+            country.setContinent(continentRepo.getById(countryDTO.getContinentId()));
+        }
+        if(countryDTO.getIconsId() != null) {
+            country.setIcons(iconRepo.findAllById(countryDTO.getIconsId()));
+        }
         return country;
     }
 
@@ -47,8 +55,12 @@ public class CountryMapper implements CustomMapper<
         country.setCreatedAt(LocalDate.now());
         country.setPopulation(countryDTO.getPopulation());
         country.setTotalSurface(countryDTO.getTotalSurface());
-        country.setContinent(continentRepo.getById(countryDTO.getContinentId()));
-        country.setIcons(iconRepo.findAllById(countryDTO.getIconsId()));
+        if(countryDTO.getContinentId() != null) {
+            country.setContinent(continentRepo.getById(countryDTO.getContinentId()));
+        }
+        if(countryDTO.getIconsId() != null) {
+            country.setIcons(iconRepo.findAllById(countryDTO.getIconsId()));
+        }
         return country;
     }
 
@@ -72,9 +84,13 @@ public class CountryMapper implements CustomMapper<
         dto.setCreatedAt(country.getCreatedAt());
         dto.setTotalSurface(country.getTotalSurface());
         dto.setPopulation(country.getPopulation());
-        dto.setContinent(continentMapper.toDetailedDTO(country.getContinent() != null ? country.getContinent() : null, false));
+        if(country.getContinent() != null) {
+            dto.setContinent(continentMapper.toDetailedDTO(country.getContinent(), false));
+        }
         if(loadRelationship) {
-            dto.setIcons(iconMapper.toDetailedDTOList(!country.getIcons().isEmpty() ? country.getIcons() : null, false));
+            if(country.getIcons() != null) {
+                dto.setIcons(iconMapper.toDetailedDTOList(country.getIcons(), false));
+            }
         }
         return dto;
     }
